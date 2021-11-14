@@ -132,7 +132,7 @@ func CheckMidByDevice(env Env, userID uint) bool {
 		log.Printf("PutWindow Error: %v\n", err)
 	}
 
-	if cnt > DeviceLimitRule.Count {
+	if cnt >= DeviceLimitRule.Count {
 		log.Printf("CheckMidByDevice: %v is judged as MID RISK\n", env)
 		exp := time.Duration(settings.SecuritySetting.TempBlockTime) * time.Second
 		_ = gredis.Set(BlockedCachePrefix+env.IP, "", exp)
