@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <meta http-equiv="content-type" content="text/html;charset=utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+            <title>系统登录</title>
+			<link rel="stylesheet" type="text/css" href="pages/css/slide.css">
+            <link rel="stylesheet" type="text/css" href="pages/css/style.css">
+            <link rel="stylesheet" type="text/css" href="pages/css/index.css">
+            <script type="text/javascript" src="pages/js/index.js"></script>
+            <script type="text/javascript" src="pages/js/jquery.min.js"></script>
+            <script type="text/javascript" src="pages/js/vector.js"></script>
+			<script type="text/javascript" src="pages/js/slide.js"></script>
+			<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script> 
+
+        </head>
+    <body>
+
+        <div id="container">
+            <div id="output">
+				
+				 <!-- 登录用户界面 -->  
+                <div id = "loginBlock" class="containerT border">
+					<div id ="registButton" class="" >注册用户</div>
+					<div id ="loginMethod" class="" >切换登录方式</div>
+                    <h1 class="title_text">用户登录</h1>
+<!--                <div id="prompt" class="prompt">{{ . }}</div> -->
+					
+                    <form class="form" id="entry_form" action="/login" target="loginF" method="post">
+                        <input type="text" placeholder="用户名" id="username" name="username" value="">
+						<input type="text" placeholder="手机号码"  id="phone" name="phone" value="" style="display: none;">
+                       
+						<input type="text" placeholder="密码" id="password" name="password">
+						<div id="phoneGetCode" style="display: none;">
+							<input type="button" id="getCode" class="login_button" value='获取'/> 
+							<input type="text" placeholder="验证码" maxlength="6" id="codeInput" name="codeInput">
+						</div>
+						
+						<div id = "slideBlock">
+							<div id="dragContainer" ><!-- 容器初始背景 -->
+							    <div id="dragBg"></div><!-- 绿色背景 -->
+							    <div id="dragText"></div><!-- 滑动容器文本 -->
+							    <div id="dragHandler" class="dragHandlerBg"></div>
+							</div> <!--    滑块         滑块初始背景 -->
+						</div>
+						<input type="hidden" id="ip" name = "id" value="" />
+						<input type="hidden" id="device_id" name = "device_id" value="" />
+						<input type="hidden" id="slideCode" value="false" />
+						<input type="hidden" id="method" value="username" />
+						<input type="button" id="entry_btn" class="login_button" value='登录'/>                    
+                    </form>
+                </div>
+				  <!-- 注册用户界面 -->  
+				  
+				  
+				<div id = "registerBlock" class="containerF border" style="display:none">
+					<div id ="loginButton" class="" >登录用户</div>
+				    <h1 class="title_text" style="margin-top: 5px;">用户注册</h1>
+									
+				    <form class="form" id="entry_form" >
+						<input type="text" placeholder="用户名" id="Rusername" name="register_name" value="">
+				        <input type="password" placeholder="密码" id="Rpassword" name="register_password">
+						<input type="password" placeholder="再次输入密码" id="Apassword" name="register_Apassword">
+						<input type="password" placeholder="手机号码" id="Rphone" name="register_phone">
+						<div id="phoneGetCode">
+							<input type="button" id="RgetCode" class="login_button" value='获取'/> 
+							<input type="text" placeholder="验证码" maxlength="6" id="RcodeInput" name="RcodeInput">
+						</div>
+						<input type="hidden" id="method" value="register" />
+						<input type="button" id="register_btn" class="login_button" value='注册'/>                    
+                    </form>
+				</div>
+				<iframe  id="loginF" style="display: none;width:0; height:0" name="loginF"  src="about:blank"></iframe>
+            </div>
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            $(function(){
+                Victor("container", "output");   //登录背景函数
+                $("#entry_name").focus();
+                $(document).keydown(function(event){
+                    if(event.keyCode==13){
+                        $("#entry_btn").click();
+                    }
+                });
+            });
+			$(document).ready(function(){
+			  
+			  $("#registButton").click(function(){
+			    $("#registerBlock").show();
+			  	$("#loginBlock").hide();
+			  });
+			  
+			  $("#loginButton").click(function(){
+			    $("#loginBlock").show();
+			  	$("#registerBlock").hide();
+			  });
+			  var f = true;
+			  
+			  $("#loginMethod").click(function(){
+				
+					$("#phone").toggle();
+					$("#username").toggle();
+					$("#password").toggle();
+					$("#phoneGetCode").toggle();
+					if(f){
+						$("#method").val("phone")
+					}else{
+						$("#method").val("username")
+					}
+					f = !f
+					
+			  });
+			  
+			  $("#getCode").click(c => getCode())
+			  $("#RgetCode").click(c => getCode2())
+			  
+			  $("#code_btn").click(function(){
+			    $("#slideBlock").show();
+			  	$("#code_btn").hide();
+			  });
+			  
+				$("#entry_btn").click(c => login());
+				$("#register_btn").click(c => register());
+			});
+        </script>
+    </body>
+</html>

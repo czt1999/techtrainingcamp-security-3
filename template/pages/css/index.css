@@ -1,0 +1,110 @@
+body{
+	display: flex; 
+	flex-direction: column;
+	height: 100%; 
+	white-space:nowrap;
+	min-width:1024px;
+	max-width:100%;
+	margin: 0;
+	user-select: none;
+	overflow : hidden��
+}
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.border{
+	border:1px solid rgba(255,255,255,88);
+	background: #00000022;
+	border-radius:20px;
+	z-index: 1;
+}
+.title_text{
+	margin-top: 20px;
+	color: white;
+}
+.login_button{
+	color:skyblue;
+}
+#entry_btn,#register_btn{
+	margin-top: 30px;
+	margin-bottom: 10px;
+	background: #f5f7f9;
+	color:skyblue;
+	width:170px;
+	cursor:pointer;
+}
+#entry_btn:hover,#register_btn:hover{
+	background-color:#fff;
+	width:200px;
+	color:skyblue;
+}
+#code_btn{
+	margin-top: 10px;
+	margin-bottom: 15px;
+	background: #f5f7f9;
+	color:skyblue;
+	width:230px;
+	cursor:pointer;
+}
+#code_btn:hover{
+	background-color:#fff;
+	width:260px;
+	color:skyblue;
+}
+#code:focus{background-color:#fff;color:#333}
+#registButton,#loginButton{
+	position: inherit;
+	float: right;
+	left:300px;
+	color:#fff;
+	font-size: 15px;
+	cursor: pointer;
+}
+#loginMethod{
+	position: inherit;
+	float: right;
+	left:30px;
+	color:#fff;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+#getCode,#RgetCode{
+	position: absolute;
+	margin-left: 200px;
+	background: #f5f7f9;
+	color:skyblue;
+	width:120px;
+	cursor:pointer;
+}
+#getCode:hover,#RgetCode:hover{
+	background-color:#fff;
+	width:120px;
+	color:skyblue;
+}
+#codeInput,#RcodeInput{
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	outline:0;
+	border:1px solid rgba(255,255,255,.4);
+	background-color:rgba(255,255,255,.2);
+	width:200px;
+	border-radius:3px;padding:8px 15px;
+	margin:0 auto 15px;
+	font-size:15px;
+	color:#fff;
+	text-align: left;
+	-webkit-transition-duration:.25s;
+	transition-duration:.25s;
+	font-weight:300
+	}
+#codeInput:hover,#RcodeInput:hover{background-color:rgba(255,255,255,.4);color:#F5F7F9;}
+#codeInput:focus,#RcodeInput:focus{background-color:#fff;width:200px;color:#333}
+input::-webkit-input-placeholder {
+    color: #EEE;
+}
+#codeInput::-webkit-input-placeholder {
+    text-align: left;
+}
