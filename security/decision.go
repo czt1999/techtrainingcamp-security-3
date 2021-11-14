@@ -114,7 +114,7 @@ func CheckMidByDevice(env Env, userID uint) bool {
 
 	nowMs := time.Now().UnixNano() / 1000
 
-	cnt, err := gredis.PutWindow(fmt.Sprintf("device-user::%v", env.DeviceID), nowMs, DeviceLimitRule.Window.Milliseconds())
+	cnt, err := gredis.PutWindowWithValue(fmt.Sprintf("device-user::%v", env.DeviceID), userID, nowMs, DeviceLimitRule.Window.Milliseconds())
 	if err != nil {
 		log.Printf("PutWindow Error: %v\n", err)
 	}

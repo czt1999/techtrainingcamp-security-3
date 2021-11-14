@@ -139,7 +139,7 @@ func LoginByName(c *gin.Context) {
 		fastFailInternalError(&appG, req.Env)
 		return
 	} else if userID == 0 {
-		fastFail(&appG, req.Env, "用户名和密码不匹配", nil)
+		fastFail(&appG, req.Env, "用户名不存在或密码错误", nil)
 		return
 	}
 
@@ -277,13 +277,13 @@ func Logout(c *gin.Context) {
 			appG.FailInternalError()
 			return
 		}
+		user, _ := models.GetUser(userID)
 		// delete user
 		if err = models.DeleteUser(userID); err != nil {
 			appG.FailInternalError()
 			return
 		}
 		// safety mechanism to prevent repeated register
-		user, _ := models.GetUser(userID)
 		_ = gredis.Set(RegisterForbiddenCachePrefix+user.PhoneNum, "", 24*time.Hour)
 		appG.OK("注销成功", nil)
 	default:

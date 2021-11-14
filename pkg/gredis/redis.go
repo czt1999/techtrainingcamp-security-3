@@ -62,3 +62,21 @@ func PutWindow(key string, timestampNow int64, windowSize int64) (int, error) {
 	}
 	return int(cnt), nil
 }
+
+func PutWindowWithValue(key string, value interface{}, timestampNow int64, windowSize int64) (int, error) {
+	pipe := rc.TxPipeline()
+	pipe.ZAdd(key, redis.Z{Member: value, Score: float64(timestampNow)})
+	pipe.ZRemRangeByScore(key, "0", fmt.Sprintf("%v", timestampNow-windowSize*1000))
+	pipe.Expire(key, time.Duration(windowSize)*time.Second)
+	pipe.ZCard(key)
+	cmder, err := pipe.Exec()
+	if err != nil {
+		return 0, err
+	}
+	// cmder[3]: ZCard(key)
+	cnt, err := cmder[3].(*redis.IntCmd).Result()
+	if err != nil {
+		return 0, err
+	}
+	return int(cnt), nil
+}
