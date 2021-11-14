@@ -6,6 +6,7 @@ import (
 	"gin/pkg/gredis"
 	"gin/pkg/settings"
 	"gin/security"
+	"github.com/gin-gonic/gin/binding"
 	"log"
 	"math/rand"
 	"regexp"
@@ -28,7 +29,7 @@ func GetApplyCode(c *gin.Context) {
 
 	req := GetApplyCodeRequest{}
 
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}

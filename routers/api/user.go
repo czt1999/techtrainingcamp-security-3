@@ -6,6 +6,7 @@ import (
 	"gin/pkg/gredis"
 	"gin/pkg/util"
 	"gin/security"
+	"github.com/gin-gonic/gin/binding"
 	"log"
 	"time"
 
@@ -30,7 +31,7 @@ func Register(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	req := RegisterRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}
@@ -119,7 +120,7 @@ func LoginByName(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	req := LoginByNameRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}
@@ -175,7 +176,7 @@ func LoginByPhone(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	req := LoginByPhoneRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}
@@ -245,7 +246,7 @@ func Logout(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	req := LogoutRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}
@@ -293,7 +294,7 @@ func GetUsername(c *gin.Context) {
 	appG := app.Gin{C: c}
 
 	req := GetUsernameRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		fastFailIllegalArgs(&appG, req.Env)
 		return
 	}

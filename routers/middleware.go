@@ -4,6 +4,7 @@ import (
 	"gin/pkg/gredis"
 	"gin/security"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ type BaseRequest struct {
 // CheckBlocked check risk level of the request and determine whether it should be blocked
 func CheckBlocked(c *gin.Context) {
 	req := BaseRequest{}
-	if err := c.BindJSON(&req); err != nil {
+	if err := c.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		// request without Env prameters will be intercepted directly
 		c.Abort()
 		return
