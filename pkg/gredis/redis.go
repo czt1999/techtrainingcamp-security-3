@@ -80,3 +80,7 @@ func PutWindowWithValue(key string, value interface{}, timestampNow int64, windo
 	}
 	return int(cnt), nil
 }
+
+func ClearWindow(key string, timestampNow int64) {
+	rc.ZRemRangeByScore(key, "0", fmt.Sprintf("%v", timestampNow+1))
+}

@@ -42,20 +42,13 @@ func Register(c *gin.Context) {
 	}
 
 	// prevent frequent re-register
-	if isExist, err := gredis.Exist(RegisterForbiddenCachePrefix + req.PhoneNum); err != nil {
-		fastFailInternalError(&appG, req.Env)
-		return
-	} else if isExist {
+	if isExist, _ := gredis.Exist(RegisterForbiddenCachePrefix + req.PhoneNum); isExist {
 		fastFail(&appG, req.Env, "请稍候再注册", nil)
 		return
 	}
 
 	// verify apply code
-	verifyCode, err := gredis.Get(CodeCachePrefix + req.PhoneNum)
-	if err != nil {
-		fastFailInternalError(&appG, req.Env)
-		return
-	}
+	verifyCode, _ := gredis.Get(CodeCachePrefix + req.PhoneNum)
 	if verifyCode != req.VerifyCode {
 		fastFail(&appG, req.Env, "验证码错误", nil)
 		return

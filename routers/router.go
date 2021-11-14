@@ -12,18 +12,18 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 
-	// API
 	apiG := r.Group("/api")
+
+	// interceptor
+	apiG.Use(CheckBlocked)
+
+	// APIs
 	apiG.POST("/register", api.Register)
 	apiG.POST("/login/name", api.LoginByName)
 	apiG.POST("/login/phone", api.LoginByPhone)
 	apiG.POST("/logout", api.Logout)
 	apiG.POST("/applycode", api.GetApplyCode)
 	apiG.POST("/user/name", api.GetUsername)
-
-	// interceptor
-	apiG.Use(AddBlocked)
-	apiG.Use(CheckBlocked)
 
 	// static resource (css, js)
 	r.Static("pages/css", "./template/pages/css")

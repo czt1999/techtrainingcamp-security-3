@@ -3,6 +3,7 @@ package security
 import (
 	"fmt"
 	"gin/pkg/gredis"
+	"gin/pkg/settings"
 	"log"
 	"time"
 )
@@ -16,6 +17,8 @@ const (
 	LowRisk  = 1
 	MidRisk  = 2
 	HighRisk = 3
+
+	BlockedCachePrefix = "block::"
 )
 
 type Env struct {
@@ -76,6 +79,9 @@ func CheckLow(env Env) bool {
 		}
 		if cntIP >= ApiLimitRules[i].Count || cntDevice >= ApiLimitRules[i].Count {
 			log.Printf("CheckLow: %v is judged as LOW RISK\n", env)
+			// clear window
+			gredis.ClearWindow(fmt.Sprintf("limit[%v]::%v", i, env.IP), nowMs)
+			gredis.ClearWindow(fmt.Sprintf("limit[%v]::%v", i, env.DeviceID), nowMs)
 			return true
 		}
 	}
@@ -101,6 +107,13 @@ func CheckMidByLow(env Env) bool {
 
 	if cntIP >= L2MRule.Count || cntDevice >= L2MRule.Count {
 		log.Printf("CheckMidByLow: %v is judged as MID RISK\n", env)
+		// clear window
+		gredis.ClearWindow(fmt.Sprintf("l2m::%v", env.IP), nowMs)
+		gredis.ClearWindow(fmt.Sprintf("l2m::%v", env.DeviceID), nowMs)
+		// set block information
+		exp := time.Duration(settings.SecuritySetting.TempBlockTime) * time.Second
+		_ = gredis.Set(BlockedCachePrefix+env.IP, "", exp)
+		_ = gredis.Set(BlockedCachePrefix+env.DeviceID, "", exp)
 		return true
 	}
 	return false
@@ -121,6 +134,9 @@ func CheckMidByDevice(env Env, userID uint) bool {
 
 	if cnt > DeviceLimitRule.Count {
 		log.Printf("CheckMidByDevice: %v is judged as MID RISK\n", env)
+		exp := time.Duration(settings.SecuritySetting.TempBlockTime) * time.Second
+		_ = gredis.Set(BlockedCachePrefix+env.IP, "", exp)
+		_ = gredis.Set(BlockedCachePrefix+env.DeviceID, "", exp)
 		return true
 	}
 	return false
@@ -144,6 +160,9 @@ func CheckHigh(env Env) bool {
 
 	if cntIP >= M2HRule.Count || cntDevice >= M2HRule.Count {
 		log.Printf("CheckHigh: %v is judged as HIGH RISK\n", env)
+		// high level risk indicates both IP and deviceID will be blocked permanently
+		_ = gredis.Set(BlockedCachePrefix+env.IP, "", 0)
+		_ = gredis.Set(BlockedCachePrefix+env.DeviceID, "", 0)
 		return true
 	}
 	return false
